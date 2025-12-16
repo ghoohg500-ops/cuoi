@@ -22,7 +22,7 @@ import platform
 # CONFIG
 # ==================================================
 
-SERVER_URL = "https://device-server-340k.onrender.com/check_device"
+
 ALLOWED_KEYS = ["nam", "nem"]
 HWID_FILE = ".hwid.lock"
 
@@ -60,54 +60,6 @@ if user_key not in ALLOWED_KEYS:
     sys.exit()
 
 print("Key accepted")
-
-# ==================================================
-# DEVICE NAME (DISPLAY ON WEB)
-# ==================================================
-
-def get_device_name():
-    try:
-        return f"{socket.gethostname()} ({platform.system()} {platform.release()})"
-    except:
-        return "Unknown Device"
-
-# ==================================================
-# SEND DEVICE TO SERVER
-# ==================================================
-
-def send_device():
-    device_name = get_device_name()
-
-    data = {
-        "hwid": HWID,
-        "hostname": device_name
-    }
-
-    print("Sending to server:", SERVER_URL)
-    print("Device:", device_name)
-
-    try:
-        r = requests.post(SERVER_URL, json=data, timeout=5)
-        print("Status:", r.status_code)
-    except Exception as e:
-        print("Server connection failed:", e)
-        sys.exit()
-
-    if r.status_code == 403:
-        print("Device blocked by server")
-        sys.exit()
-
-    if r.status_code != 200:
-        print("Server error")
-        sys.exit()
-
-    print("Device accepted by server")
-
-# ==================================================
-# START
-# ==================================================
-
-send_device()
 
 print("Tool is running normally")
 # ---- PLACE YOUR MAIN CODE BELOW ----
